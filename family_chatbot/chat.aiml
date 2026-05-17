@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aiml version="1.0.1">
+
+<!-- Relationship questions: set rel + p1; Python sets p2; second respond fills template -->
+
+<category>
+  <pattern>WHO IS * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>WHO IS THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>CAN YOU TELL ME WHO IS * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>CAN YOU TELL ME WHO THE * OF * IS</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>TELL ME THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>TELL ME * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>WHAT IS THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>WHAT IS * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>DO YOU KNOW THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>I WANT TO KNOW THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>I WANT TO KNOW WHO IS THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>FIND THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>SEARCH * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<!-- Short forms -->
+
+<category>
+  <pattern>FATHER OF *</pattern>
+  <template>
+    <set name="rel">father</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>MOTHER OF *</pattern>
+  <template>
+    <set name="rel">mother</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>GRANDFATHER OF *</pattern>
+  <template>
+    <set name="rel">grandfather</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>GRANDMOTHER OF *</pattern>
+  <template>
+    <set name="rel">grandmother</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>BROTHER OF *</pattern>
+  <template>
+    <set name="rel">brother</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>SISTER OF *</pattern>
+  <template>
+    <set name="rel">sister</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>SIBLING OF *</pattern>
+  <template>
+    <set name="rel">sibling</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>UNCLE OF *</pattern>
+  <template>
+    <set name="rel">uncle</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>AUNT OF *</pattern>
+  <template>
+    <set name="rel">aunt</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>ANCESTOR OF *</pattern>
+  <template>
+    <set name="rel">ancestor</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<!-- Age questions -->
+
+<category>
+  <pattern>HOW OLD IS *</pattern>
+  <template>
+    <set name="rel">age</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/>
+  </template>
+</category>
+
+<category>
+  <pattern>AGE OF *</pattern>
+  <template>
+    <set name="rel">age</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/>
+  </template>
+</category>
+
+<category>
+  <pattern>WHAT IS THE AGE OF *</pattern>
+  <template>
+    <set name="rel">age</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/>
+  </template>
+</category>
+
+<!-- Greetings -->
+
+<category>
+  <pattern>HI</pattern>
+  <template>Hello! Ask me about family relationships, for example: Who is the father of Ali?</template>
+</category>
+
+<category>
+  <pattern>HELLO</pattern>
+  <template>Hello! Ask me about family relationships, for example: Who is the father of Ali?</template>
+</category>
+
+<category>
+  <pattern>HEY</pattern>
+  <template>Hey! Ask me about family relationships, for example: Who is the father of Ali?</template>
+</category>
+
+<!-- Help -->
+
+<category>
+  <pattern>HELP</pattern>
+  <template>
+You can ask relationship questions in many ways, for example:
+- Who is the father of Ali?
+- What is the grandmother of Usman?
+- Tell me the sibling of Ali
+- Father of Ali
+- How old is Haider?
+Type MEMBERS to see all family members.
+  </template>
+</category>
+
+<!-- Members list -->
+
+<category>
+  <pattern>MEMBERS</pattern>
+  <template>MEMBERS_LIST</template>
+</category>
+
+<!-- Farewell -->
+
+<category>
+  <pattern>BYE</pattern>
+  <template>Goodbye! Come back anytime to explore the family tree.</template>
+</category>
+
+<category>
+  <pattern>GOODBYE</pattern>
+  <template>Goodbye! Come back anytime to explore the family tree.</template>
+</category>
+
+<category>
+  <pattern>EXIT</pattern>
+  <template>Goodbye! Come back anytime to explore the family tree.</template>
+</category>
+
+<category>
+  <pattern>QUIT</pattern>
+  <template>Goodbye! Come back anytime to explore the family tree.</template>
+</category>
+
+<!-- Fallback (must be last) -->
+
+<category>
+  <pattern>*</pattern>
+  <template>
+I did not understand that. Try asking something like: Who is the father of Ali? Type HELP for examples.
+  </template>
+</category>
+
+</aiml>
