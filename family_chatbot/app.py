@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import re
+import difflib
 from pathlib import Path
 
 import streamlit as st
@@ -291,6 +292,11 @@ def detect_list_intent(text: str) -> str | None:
     if re.search(r"\bOF\b", core):
         return None
 
+    # Strip filler words/phrases to handle "male members in family" -> "male"
+    core = re.sub(r'\b(IN|OF)\s+(THE\s+)?FAMILY\b', '', core)
+    core = re.sub(r'\b(MEMBERS|MEMBER|PEOPLE|PERSONS|RECORD|RECORDS|LIST)\b', '', core)
+    core = core.strip()
+
     if core in LIST_KEYWORD_MAP:
         return LIST_KEYWORD_MAP[core]
 
@@ -352,10 +358,83 @@ def resolve_pronouns(clause: str, context_person: str) -> str:
     return c
 
 
+def extract_and_correct_names(text: str, members: list[str]) -> list[tuple[str, str]]:
+    words = re.findall(r'\b\w+\b', text.lower())
+    found = []
+    seen = set()
+    for w in words:
+        if w in seen:
+            continue
+        if w in members:
+            found.append((w, w))
+            seen.add(w)
+        else:
+            matches = difflib.get_close_matches(w, members, n=1, cutoff=0.8)
+            if matches:
+                matched_name = matches[0]
+                if matched_name not in seen:
+                    found.append((w, matched_name))
+                    seen.add(matched_name)
+    return found
+
+
+def correct_names_in_text(text: str, members: list[str]) -> str:
+    found_names = extract_and_correct_names(text, members)
+    corrected_text = text
+    for original, corrected in found_names:
+        if original != corrected:
+            corrected_text = re.sub(
+                r'\b' + re.escape(original) + r'\b',
+                corrected,
+                corrected_text,
+                flags=re.IGNORECASE
+            )
+    return corrected_text
+
+
+def should_split_multiple_names(text: str) -> bool:
+    t = text.upper().strip()
+    if t.startswith("ARE ") and any(w in t for w in ["MARRIED", "SPOUSES", "SIBLINGS", "BROTHERS", "SISTERS", "COUSINS"]):
+        return False
+    if t.startswith("IS ") and "MARRIED TO" in t:
+        return False
+    return True
+
+
+def split_multiple_subjects(text: str, members: list[str]) -> list[str]:
+    if not should_split_multiple_names(text):
+        return [text]
+        
+    found_names = extract_and_correct_names(text, members)
+    if len(found_names) <= 1:
+        return [text]
+        
+    words_in_text = [item[0] for item in found_names]
+    corrected_names = [item[1] for item in found_names]
+    
+    pattern = r'\b(' + '|'.join(re.escape(w) for w in words_in_text) + r')\b'
+    matches = list(re.finditer(pattern, text, re.IGNORECASE))
+    if len(matches) < 2:
+        return [text]
+        
+    start_pos = matches[0].start()
+    end_pos = matches[-1].end()
+    
+    prefix = text[:start_pos]
+    suffix = text[end_pos:]
+    
+    sub_queries = []
+    for corrected_name in corrected_names:
+        sub_queries.append(f"{prefix}{corrected_name}{suffix}")
+    return sub_queries
+
+
 def process_user_input(user_text: str, members: list[str]) -> list[str]:
+    corrected_text = correct_names_in_text(user_text, members)
+    
     clauses = re.split(
         r'\s+and\s+(?=his\b|her\b|how\b|what\b|who\b|she\b|he\b|age\b|also\b)|\s+also\s+|\s*;\s*',
-        user_text,
+        corrected_text,
         flags=re.IGNORECASE
     )
     
@@ -367,16 +446,19 @@ def process_user_input(user_text: str, members: list[str]) -> list[str]:
         if not clause_str:
             continue
             
-        words = re.findall(r'\b\w+\b', clause_str.lower())
-        for word in words:
-            if word in members:
-                context_person = word
-                break
+        sub_clauses = split_multiple_subjects(clause_str, members)
         
-        if i > 0 and context_person:
-            clause_str = resolve_pronouns(clause_str, context_person)
+        for sub_clause in sub_clauses:
+            words = re.findall(r'\b\w+\b', sub_clause.lower())
+            for word in words:
+                if word in members:
+                    context_person = word
+                    break
             
-        processed_clauses.append(clause_str)
+            if i > 0 and context_person:
+                sub_clause = resolve_pronouns(sub_clause, context_person)
+                
+            processed_clauses.append(sub_clause)
         
     return processed_clauses
 
