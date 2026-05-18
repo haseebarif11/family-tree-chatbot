@@ -4,6 +4,24 @@
 <!-- Relationship questions: set rel + p1; Python sets p2; second respond fills template -->
 
 <category>
+  <pattern>WHO ARE THE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>WHO ARE * OF *</pattern>
+  <template>
+    <set name="rel"><star/></set>
+    <set name="p1"><star index="2"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
   <pattern>WHO IS * OF *</pattern>
   <template>
     <set name="rel"><star/></set>
@@ -212,6 +230,141 @@
   </template>
 </category>
 
+<category>
+  <pattern>WIFE OF *</pattern>
+  <template>
+    <set name="rel">wife</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>HUSBAND OF *</pattern>
+  <template>
+    <set name="rel">husband</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>SPOUSE OF *</pattern>
+  <template>
+    <set name="rel">spouse</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>PARENTS OF *</pattern>
+  <template>
+    <set name="rel">parents</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>PARENT OF *</pattern>
+  <template>
+    <set name="rel">parent</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>CHILDREN OF *</pattern>
+  <template>
+    <set name="rel">children</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>CHILD OF *</pattern>
+  <template>
+    <set name="rel">children</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>SON OF *</pattern>
+  <template>
+    <set name="rel">son</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>DAUGHTER OF *</pattern>
+  <template>
+    <set name="rel">daughter</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>GRANDPARENT OF *</pattern>
+  <template>
+    <set name="rel">grandparent</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>GRANDCHILD OF *</pattern>
+  <template>
+    <set name="rel">grandchild</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>COUSIN OF *</pattern>
+  <template>
+    <set name="rel">cousin</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>NEPHEW OF *</pattern>
+  <template>
+    <set name="rel">nephew</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>NIECE OF *</pattern>
+  <template>
+    <set name="rel">niece</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>DESCENDANT OF *</pattern>
+  <template>
+    <set name="rel">descendant</set>
+    <set name="p1"><star/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
 <!-- Age questions -->
 
 <category>
@@ -239,6 +392,263 @@
     <set name="p1"><star/></set>
     <get name="p2"/>
   </template>
+</category>
+
+<!-- List / enumeration queries (all males, all parents, ages, etc.) -->
+
+<category>
+  <pattern>ALL MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>MALE</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL MALE</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>NAMES OF MALE</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE NAMES OF MALE</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>SHOW ALL MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>WHAT ARE ALL THE MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>TELL ME ALL MALES</pattern>
+  <template><set name="rel">list_male</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>FEMALE</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL FEMALE</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>NAMES OF FEMALE</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE NAMES OF FEMALE</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>SHOW ALL FEMALES</pattern>
+  <template><set name="rel">list_female</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>NAMES OF PARENTS</pattern>
+  <template><set name="rel">list_parent</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL CHILDREN</pattern>
+  <template><set name="rel">list_child</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE CHILDREN</pattern>
+  <template><set name="rel">list_child</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST CHILDREN</pattern>
+  <template><set name="rel">list_child</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL CHILDREN</pattern>
+  <template><set name="rel">list_child</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>CHILDREN</pattern>
+  <template><set name="rel">list_child</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL SONS</pattern>
+  <template><set name="rel">list_son</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST SONS</pattern>
+  <template><set name="rel">list_son</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL DAUGHTERS</pattern>
+  <template><set name="rel">list_daughter</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST DAUGHTERS</pattern>
+  <template><set name="rel">list_daughter</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL THE SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>NAMES OF SIBLINGS</pattern>
+  <template><set name="rel">list_sibling</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST ALL AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>SHOW ALL AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>WHAT ARE THE AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>AGES</pattern>
+  <template><set name="rel">list_age</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>ALL MARRIED COUPLES</pattern>
+  <template><set name="rel">list_married</set><set name="p1"></set>LIST</template>
+</category>
+
+<category>
+  <pattern>LIST MARRIED COUPLES</pattern>
+  <template><set name="rel">list_married</set><set name="p1"></set>LIST</template>
 </category>
 
 <!-- Greetings -->
@@ -269,7 +679,12 @@ You can ask relationship questions in many ways, for example:
 - Tell me the sibling of Ali
 - Father of Ali
 - How old is Haider?
-Type MEMBERS to see all family members.
+List queries (lists everyone in that group):
+- male / males / all males
+- female / females / all females
+- parents / children / siblings / sons / daughters
+- ages / married couples
+- MEMBERS — every family name
   </template>
 </category>
 
@@ -300,6 +715,160 @@ Type MEMBERS to see all family members.
 <category>
   <pattern>QUIT</pattern>
   <template>Goodbye! Come back anytime to explore the family tree.</template>
+</category>
+
+<!-- Subject-first / Inverse relationship queries: set inverse, rel, p1 -->
+
+<category>
+  <pattern>* IS THE * OF</pattern>
+  <template>
+    <set name="inverse">true</set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="1"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>* IS A * OF</pattern>
+  <template>
+    <set name="inverse">true</set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="1"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>* IS AN * OF</pattern>
+  <template>
+    <set name="inverse">true</set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="1"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<category>
+  <pattern>* IS * OF</pattern>
+  <template>
+    <set name="inverse">true</set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="1"/></set>
+    <get name="p2"/> IS <get name="rel"/> OF <get name="p1"/>
+  </template>
+</category>
+
+<!-- Verification queries: set verify_p1, rel, and p1; return VERIFY -->
+
+<category>
+  <pattern>IS * THE * OF *</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="3"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>IS * A * OF *</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="3"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>IS * AN * OF *</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="3"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>IS * * OF *</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel"><star index="2"/></set>
+    <set name="p1"><star index="3"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * MARRIED</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">married</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * SPOUSES</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">spouse</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>IS * MARRIED TO *</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">spouse</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * SIBLINGS</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">sibling</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * BROTHERS</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">brother</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * SISTERS</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">sister</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
+</category>
+
+<category>
+  <pattern>ARE * AND * COUSINS</pattern>
+  <template>
+    <set name="verify_p1"><star/></set>
+    <set name="rel">cousin</set>
+    <set name="p1"><star index="2"/></set>
+    VERIFY
+  </template>
 </category>
 
 <!-- Fallback (must be last) -->

@@ -27,6 +27,67 @@ def _atom(value: str) -> str:
     return re.sub(r"\s+", "", value.strip().lower())
 
 
+def normalize_relation_name(relation: str) -> str:
+    r = relation.strip().lower().replace("-", " ")
+    r = re.sub(r"\s+", "_", r)
+    aliases = {
+        "parents": "parent",
+        "parent": "parent",
+        "siblings": "sibling",
+        "grandparents": "grandparent",
+        "grandchildren": "grandchild",
+        "children": "children",
+        "child": "children",
+        "kids": "children",
+        "sons": "son",
+        "daughters": "daughter",
+        "wives": "wife",
+        "husbands": "husband",
+        "spouses": "spouse",
+        "fathers": "father",
+        "father": "father",
+        "mothers": "mother",
+        "mother": "mother",
+        "grandfathers": "grandfather",
+        "grandmothers": "grandmother",
+        "brothers": "brother",
+        "sisters": "sister",
+        "uncles": "uncle",
+        "aunts": "aunt",
+        "cousins": "cousin",
+        "nephews": "nephew",
+        "nieces": "niece",
+        "married": "spouse",
+        "married_to": "spouse",
+    }
+    return aliases.get(r, r)
+
+
+def build_relation_goal(relation: str, person: str, inverse: bool = False) -> str | None:
+    """Build a Prolog goal for relation(X, Person) style queries."""
+    relation = normalize_relation_name(relation)
+    if inverse:
+        if relation == "age":
+            return f"age({person}, X)"
+        if relation == "parent":
+            return f"parent({person}, X)"
+        if relation == "children":
+            return f"parent(X, {person})"
+        if relation == "grandchild":
+            return f"parent(X, Y), parent(Y, {person})"
+        return f"{relation}({person}, X)"
+    else:
+        if relation == "age":
+            return f"age({person}, X)"
+        if relation == "parent":
+            return f"parent(X, {person})"
+        if relation == "children":
+            return f"parent({person}, X)"
+        if relation == "grandchild":
+            return f"parent({person}, Y), parent(Y, X)"
+        return f"{relation}(X, {person})"
+
+
 def parse_family_kb(path: Path = PL_PATH) -> dict:
     """Load fact predicates from family_kb.pl (keeps fallback in sync with edits)."""
     text = path.read_text(encoding="utf-8")
@@ -85,7 +146,9 @@ def _prepend_swipl_to_path() -> None:
 
 
 class PrologEngine(Protocol):
-    def query_relation(self, relation: str, person: str) -> list[str]: ...
+    def query_relation(self, relation: str, person: str, inverse: bool = False) -> list[str]: ...
+
+    def query_list(self, list_type: str) -> list[str]: ...
 
 
 class PySwipEngine:
@@ -96,21 +159,83 @@ class PySwipEngine:
         self._prolog = Prolog()
         self._prolog.consult(str(PL_PATH))
 
-    def query_relation(self, relation: str, person: str) -> list[str]:
+    def query_relation(self, relation: str, person: str, inverse: bool = False) -> list[str]:
         person = re.sub(r"\s+", "", person.strip().lower())
-        relation = relation.strip().lower().replace("-", " ").replace(" ", "_")
-
-        if relation == "age":
-            goal = f"age({person}, X)"
-        else:
-            goal = f"{relation}(X, {person})"
+        relation = normalize_relation_name(relation)
+        goal = build_relation_goal(relation, person, inverse)
+        if not goal:
+            return []
 
         try:
             rows = list(self._prolog.query(goal))
         except Exception:
             return []
 
-        return [str(row["X"]) for row in rows]
+        if relation == "age":
+            return [str(row["X"]) for row in rows]
+
+        seen: set[str] = set()
+        result: list[str] = []
+        for row in rows:
+            name = str(row["X"])
+            if name not in seen:
+                seen.add(name)
+                result.append(name)
+        return sorted(result)
+
+    def query_list(self, list_type: str) -> list[str]:
+        list_type = list_type.strip().lower()
+        goals = {
+            "list_male": "male(X)",
+            "list_female": "female(X)",
+            "list_parent": "parent(X, _)",
+            "list_child": "parent(_, X)",
+            "list_son": "son(X, _)",
+            "list_daughter": "daughter(X, _)",
+            "list_sibling": "sibling(X, _)",
+            "list_age": "age(X, Y)",
+            "list_married": "married(H, W)",
+        }
+        goal = goals.get(list_type)
+        if not goal and list_type.startswith("list_"):
+            rel_name = list_type[5:]
+            valid_relations = {
+                "father", "mother", "grandfather", "grandmother", "grandparent",
+                "brother", "sister", "uncle", "aunt", "cousin", "nephew", "niece",
+                "ancestor", "descendant", "husband", "wife", "spouse",
+                "father_in_law", "mother_in_law", "brother_in_law", "sister_in_law",
+                "elder_sibling", "younger_sibling", "paternal_grandfather"
+            }
+            if rel_name in valid_relations:
+                goal = f"{rel_name}(X, _)"
+
+        if not goal:
+            return []
+
+        try:
+            rows = list(self._prolog.query(goal))
+        except Exception:
+            return []
+
+        if list_type == "list_married":
+            pairs = sorted((str(r["H"]), str(r["W"])) for r in rows)
+            return [f"{h}:{w}" for h, w in pairs]
+
+        if list_type == "list_age":
+            pairs = sorted(
+                ((str(r["X"]), int(r["Y"])) for r in rows),
+                key=lambda item: (-item[1], item[0]),
+            )
+            return [f"{name}:{age}" for name, age in pairs]
+
+        seen: set[str] = set()
+        result: list[str] = []
+        for row in rows:
+            name = str(row["X"])
+            if name not in seen:
+                seen.add(name)
+                result.append(name)
+        return sorted(result)
 
 
 class PythonFallbackEngine:
@@ -264,19 +389,70 @@ class PythonFallbackEngine:
             out |= self.father(f)
         return out
 
-    def query_relation(self, relation: str, person: str) -> list[str]:
+    def query_relation(self, relation: str, person: str, inverse: bool = False) -> list[str]:
         person = re.sub(r"\s+", "", person.strip().lower())
-        relation = relation.strip().lower().replace("-", " ").replace(" ", "_")
+        relation = normalize_relation_name(relation)
 
-        if relation == "age":
-            if person in self.age:
-                return [str(self.age[person])]
-            return []
+        if not inverse:
+            if relation == "age":
+                if person in self.age:
+                    return [str(self.age[person])]
+                return []
 
-        method = getattr(self, relation, None)
-        if method is None:
-            return []
-        return sorted(method(person))
+            if relation == "parent":
+                return sorted(self._parents_of(person))
+            if relation == "children":
+                return sorted(self._children_of(person))
+            if relation == "grandchild":
+                out: set[str] = set()
+                for child in self._children_of(person):
+                    out |= self._children_of(child)
+                return sorted(out)
+
+            method = getattr(self, relation, None)
+            if method is None:
+                return []
+            return sorted(method(person))
+        else:
+            out: set[str] = set()
+            for x in self._all_people:
+                if person in self.query_relation(relation, x, inverse=False):
+                    out.add(x)
+            return sorted(out)
+
+    def query_list(self, list_type: str) -> list[str]:
+        list_type = list_type.strip().lower()
+
+        if list_type == "list_male":
+            return sorted(self.male)
+        if list_type == "list_female":
+            return sorted(self.female)
+        if list_type == "list_parent":
+            return sorted({p for p, _ in self.parent})
+        if list_type == "list_child":
+            return sorted({c for _, c in self.parent})
+        if list_type == "list_son":
+            return sorted({c for _, c in self.parent if c in self.male})
+        if list_type == "list_daughter":
+            return sorted({c for _, c in self.parent if c in self.female})
+        if list_type == "list_sibling":
+            return sorted(p for p in self._all_people if self.sibling(p))
+        if list_type == "list_married":
+            pairs = sorted(
+                f"{h}:{w}" for h, w in self.married
+            )
+            return pairs
+        if list_type == "list_age":
+            pairs = sorted(self.age.items(), key=lambda item: (-item[1], item[0]))
+            return [f"{name}:{years}" for name, years in pairs]
+
+        if list_type.startswith("list_"):
+            rel_name = list_type[5:]
+            method = getattr(self, rel_name, None)
+            if method is not None:
+                return sorted({x for p in self._all_people for x in method(p)})
+
+        return []
 
 
 def create_engine() -> tuple[PrologEngine, str]:
