@@ -651,23 +651,6 @@
   <template><set name="rel">list_married</set><set name="p1"></set>LIST</template>
 </category>
 
-<!-- Greetings -->
-
-<category>
-  <pattern>HI</pattern>
-  <template>Hello! Ask me about family relationships, for example: Who is the father of Ali?</template>
-</category>
-
-<category>
-  <pattern>HELLO</pattern>
-  <template>Hello! Ask me about family relationships, for example: Who is the father of Ali?</template>
-</category>
-
-<category>
-  <pattern>HEY</pattern>
-  <template>Hey! Ask me about family relationships, for example: Who is the father of Ali?</template>
-</category>
-
 <!-- Help -->
 
 <category>
@@ -693,28 +676,6 @@ List queries (lists everyone in that group):
 <category>
   <pattern>MEMBERS</pattern>
   <template>MEMBERS_LIST</template>
-</category>
-
-<!-- Farewell -->
-
-<category>
-  <pattern>BYE</pattern>
-  <template>Goodbye! Come back anytime to explore the family tree.</template>
-</category>
-
-<category>
-  <pattern>GOODBYE</pattern>
-  <template>Goodbye! Come back anytime to explore the family tree.</template>
-</category>
-
-<category>
-  <pattern>EXIT</pattern>
-  <template>Goodbye! Come back anytime to explore the family tree.</template>
-</category>
-
-<category>
-  <pattern>QUIT</pattern>
-  <template>Goodbye! Come back anytime to explore the family tree.</template>
 </category>
 
 <!-- Subject-first / Inverse relationship queries: set inverse, rel, p1 -->
@@ -868,15 +829,6 @@ List queries (lists everyone in that group):
     <set name="rel">cousin</set>
     <set name="p1"><star index="2"/></set>
     VERIFY
-  </template>
-</category>
-
-<!-- Fallback (must be last) -->
-
-<category>
-  <pattern>*</pattern>
-  <template>
-I did not understand that. Try asking something like: Who is the father of Ali? Type HELP for examples.
   </template>
 </category>
 

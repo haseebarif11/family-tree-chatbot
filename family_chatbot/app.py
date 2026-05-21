@@ -19,8 +19,9 @@ except ImportError:
 from prolog_bridge import create_engine, list_family_members, normalize_relation_name
 
 BASE_DIR = Path(__file__).resolve().parent
-AIML_PATH = BASE_DIR / "chat.aiml"
+AIML_DIR = BASE_DIR.parent / "data"
 PL_PATH = BASE_DIR / "family_kb.pl"
+BRAIN_PATH = BASE_DIR / "brain.brn"
 
 
 def normalize_name(name: str) -> str:
@@ -56,8 +57,37 @@ def load_aiml_kernel(_aiml_mtime: float):
     if aiml is None:
         raise RuntimeError("python-aiml is not installed. Run: pip install python-aiml")
     kernel = aiml.Kernel()
-    if AIML_PATH.exists():
-        kernel.learn(str(AIML_PATH))
+    
+    # Enable verbose mode for logging loading activity
+    kernel.verbose(True)
+    
+    if BRAIN_PATH.exists():
+        kernel.loadBrain(str(BRAIN_PATH))
+    else:
+        # Load all AIML files in the data directory
+        if AIML_DIR.exists():
+            aiml_files = sorted(
+                p for p in AIML_DIR.iterdir()
+                if p.is_file() and (".aiml" in p.name.lower() or p.name.lower() == "startup.xml")
+            )
+            # Load all other files first
+            other_files = [f for f in aiml_files if f.name.lower() != "family.aiml"]
+            for path in other_files:
+                kernel.learn(str(path))
+            
+            # Load family.aiml last so its patterns take precedence
+            family_aiml_path = AIML_DIR / "family.aiml"
+            if family_aiml_path.exists():
+                kernel.learn(str(family_aiml_path))
+            
+            # Save precompiled brain for sub-second startup next time
+            try:
+                kernel.saveBrain(str(BRAIN_PATH))
+            except Exception as e:
+                st.warning(f"Could not save AIML brain cache: {e}")
+        else:
+            raise RuntimeError(f"AIML data directory not found at: {AIML_DIR}")
+            
     return kernel
 
 
@@ -396,7 +426,7 @@ def should_split_multiple_names(text: str) -> bool:
     t = text.upper().strip()
     if t.startswith("ARE ") and any(w in t for w in ["MARRIED", "SPOUSES", "SIBLINGS", "BROTHERS", "SISTERS", "COUSINS"]):
         return False
-    if t.startswith("IS ") and "MARRIED TO" in t:
+    if t.startswith("IS ") and ("MARRIED TO" in t or " OF " in t):
         return False
     return True
 
@@ -574,7 +604,19 @@ def main() -> None:
     st.caption("Ask about relationships in natural language — powered by AIML, Prolog, and Streamlit.")
 
     kb_mtime = PL_PATH.stat().st_mtime if PL_PATH.exists() else 0.0
-    aiml_mtime = AIML_PATH.stat().st_mtime if AIML_PATH.exists() else 0.0
+    
+    # Calculate the max modified time of all AIML files to track edits
+    aiml_mtimes = []
+    if AIML_DIR.exists():
+        for p in AIML_DIR.iterdir():
+            if p.is_file() and (".aiml" in p.name.lower() or p.name.lower() == "startup.xml"):
+                aiml_mtimes.append(p.stat().st_mtime)
+    aiml_mtime = max(aiml_mtimes) if aiml_mtimes else 0.0
+    
+    # If the precompiled brain is missing, force a reload/rebuild
+    if not BRAIN_PATH.exists():
+        import time
+        aiml_mtime = time.time()
 
     try:
         engine, engine_label = load_engine(kb_mtime)
@@ -594,8 +636,14 @@ def main() -> None:
             "- **List ages** / **MEMBERS**"
         )
         if st.button("Reload family data"):
+            # Clear resources and delete precompiled brain to force rebuilding from AIML files
             load_engine.clear()
             load_aiml_kernel.clear()
+            if BRAIN_PATH.exists():
+                try:
+                    BRAIN_PATH.unlink()
+                except Exception:
+                    pass
             st.rerun()
 
     if "messages" not in st.session_state:
